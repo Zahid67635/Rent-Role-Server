@@ -16,11 +16,18 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const allPropertyCollection = client.db('Rent_Roll').collection('all_properties');
+        const usersCollection = client.db('Rent_Roll').collection('users');
         app.get('/allProperties', async (req, res) => {
             const query = {};
             const properties = await allPropertyCollection.find(query).toArray();
             res.send(properties);
         });
+
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
     }
     finally {
 
