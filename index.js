@@ -17,6 +17,7 @@ async function run() {
     try {
         const allPropertyCollection = client.db('Rent_Roll').collection('all_properties');
         const usersCollection = client.db('Rent_Roll').collection('users');
+        const bookingsCollection = client.db('Rent_Roll').collection('bookingsCollection');
         app.get('/allProperties', async (req, res) => {
             const query = {};
             const properties = await allPropertyCollection.find(query).toArray();
@@ -32,6 +33,25 @@ async function run() {
         app.put('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
+
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email: email }
+            const user = await usersCollection.findOne(query)
+            res.send(user)
+        })
+
+        app.post('/bookings', async (req, res) => {
+            const data = req.body
+            const result = await bookingsCollection.insertOne(data);
+            res.send(result);
+        })
+        app.get('/bookings', async (req, res) => {
+            const owner = req.query.owner;
+            const query = { owner };
+            const result = await bookingsCollection.findOne(query)
             res.send(result);
         })
     }
